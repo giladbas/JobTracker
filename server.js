@@ -3,9 +3,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// טען את המשתנים מהסביבה
+// בדוק שמשתני הסביבה מוגדרים
+if (!process.env.CLIENT_EMAIL || !process.env.PRIVATE_KEY) {
+  console.error("Missing CLIENT_EMAIL or PRIVATE_KEY environment variables");
+  process.exit(1); // עצור את השרת אם משתנים חסרים
+}
+
 const client_email = process.env.CLIENT_EMAIL;
 const private_key = process.env.PRIVATE_KEY;
+
 
 // הגדרות Google Sheets API
 const auth = new google.auth.GoogleAuth({
