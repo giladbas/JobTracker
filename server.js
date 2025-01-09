@@ -10,7 +10,7 @@ if (!process.env.CLIENT_EMAIL || !process.env.PRIVATE_KEY) {
 }
 
 const client_email = process.env.CLIENT_EMAIL;
-const private_key = process.env.PRIVATE_KEY;
+const private_key = process.env.PRIVATE_KEY.replace(/\\n/g, '\n'); // המרת \\n למעברי שורה אמיתיים
 
 
 // הגדרות Google Sheets API
