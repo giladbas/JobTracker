@@ -2,11 +2,10 @@ const { google } = require('googleapis');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fs = require('fs');
 
-// טען את קובץ ה-JSON של חשבון השירות
-const credentials = JSON.parse(fs.readFileSync('original-future-447315-n2-85821b83cd0d.json')); // החלף בשם קובץ ה-JSON שלך
-const { client_email, private_key } = credentials;
+// טען את המשתנים מהסביבה
+const client_email = process.env.CLIENT_EMAIL;
+const private_key = process.env.PRIVATE_KEY;
 
 // הגדרות Google Sheets API
 const auth = new google.auth.GoogleAuth({
@@ -19,12 +18,13 @@ const auth = new google.auth.GoogleAuth({
 
 const sheets = google.sheets({ version: 'v4', auth });
 
-const SPREADSHEET_ID = '1zIdLC_8hvfSkBZVVPQihFceypirsL03x6z3NhEKhC4w'; // החלף ב-ID של הגיליון שלך (מופיע ב-URL)
-const SHEET_NAME = 'jobs'; // שם הטאב בגיליון שלך (ברירת מחדל: Sheet1)
+const SPREADSHEET_ID = '1zIdLC_8hvfSkBZVVPQihFceypirsL03x6z3NhEKhC4w'; // החלף ב-ID של הגיליון שלך
+const SHEET_NAME = 'jobs'; // שם הטאב בגיליון שלך
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+
 
 // קבלת כל הנתונים מהגיליון
 app.get('/jobs', async (req, res) => {
