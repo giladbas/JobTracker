@@ -4,67 +4,880 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Tracker</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --border-width: 1px;
+      --border-radius: 4px;
+      --primary: #FF90E8;
+      --primary-hover: #FF7CE5;
+      --secondary: #F1F1F1;
+      --secondary-hover: #E5E5E5;
+      --success: #00BA88;
+      --error: #FF4D4F;
+      --warning: #FFAB00;
+      --info: #1890FF;
+      --text-primary: #000000;
+      --text-secondary: #6B7280;
+      --border-color: #E5E5E5;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--text-primary);
+      border-radius: var(--border-radius);
+      padding: 12px 24px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    input, select, textarea {
+      padding: 16px;
+      font-size: 0.875rem;
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+      overflow-y: auto;
+      height: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    th {
+      background-color: var(--secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 16px;
+      font-size: 0.875rem;
+      border-bottom: var(--border-width) solid var(--border-color);
+    }
+
+    td {
+      padding: 16px;
+      font-size: 0.875rem;
+      border-bottom: var(--border-width) solid var(--border-color);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-row {
+      border-bottom: var(--border-width) solid var(--border-color);
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar {
+      border-left: var(--border-width) solid var(--border-color);
+    }
+
+    .sidebar-header {
+      border-bottom: var(--border-width) solid var(--border-color);
+    }
+
+    .form-submit {
+      border-top: var(--border-width) solid var(--border-color);
+    }
+
+    .dropdown-menu {
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
+    }
+
+    .status-badge {
+      border-radius: var(--border-radius);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .modal-content {
+      border-radius: var(--border-radius);
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .description-cell {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #addJobBtn {
+      border-radius: var(--border-radius);
+    }
+
+    .btn-secondary, .btn-danger {
+      border-radius: var(--border-radius);
+      font-weight: 500;
+    }
+
+    /* עדכון גודל טקסט בטבלה */
+    .table-row td {
+      font-size: 0.875rem;
+    }
+
+    .table-row td.font-medium {
+      font-weight: 500;
+    }
+
+    /* עדכון כותרת הלוגו */
+    .logo-container span {
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    /* עדכון גודל טקסט בתפריט */
+    .dropdown-item {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Gumroad Design System Colors */
+    :root {
+      --primary: #FF90E8;
+      --primary-hover: #FF7CE5;
+      --secondary: #F1F1F1;
+      --secondary-hover: #E5E5E5;
+      --success: #00BA88;
+      --error: #FF4D4F;
+      --warning: #FFAB00;
+      --info: #1890FF;
+      --text-primary: #000000;
+      --text-secondary: #6B7280;
+      --border-color: #E5E5E5;
+    }
+
+    /* Gumroad Button Styles */
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Gumroad Input Styles */
+    input, select, textarea {
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 144, 232, 0.2);
+    }
+
+    /* Gumroad Table Styles */
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    th {
+      background-color: var(--secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 16px;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* Status Colors */
+    .status-pending {
+      background-color: var(--warning);
+      color: var(--text-primary);
+    }
+
+    .status-rejected {
+      background-color: var(--error);
+      color: white;
+    }
+
+    .status-interview {
+      background-color: var(--info);
+      color: white;
+    }
+
+    .status-accepted {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .sidebar {
+      position: fixed;
+      right: -500px;
+      top: 0;
+      width: 500px;
+      height: 100vh;
+      transition: right 0.3s ease-in-out;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: white;
+      border-left: 1px solid var(--border-color);
+    }
+    .sidebar.open {
+      right: 0;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 40;
+    }
+    .overlay.show {
+      display: block;
+    }
+    .description-cell {
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.3s ease;
+      padding-right: 2rem;
+      padding-top: 0.25rem;
+    }
+    .expanded .description-cell {
+      white-space: normal;
+      max-height: none;
+      padding-bottom: 1rem;
+    }
+    tr.table-row:nth-child(odd) {
+      background-color: #ffffff;
+    }
+    tr.table-row:nth-child(even) {
+      background-color: #f3f4f6;
+    }
+    tr.table-row:hover {
+      background-color: #e5e7eb;
+    }
+    .expand-arrow {
+      transition: transform 0.3s ease;
+    }
+    .expanded .expand-arrow {
+      transform: rotate(180deg);
+    }
+    .sort-button {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sort-button:hover {
+      color: #ff8c5f;
+    }
+    .sort-active {
+      color: #ff8c5f;
+    }
+    .sidebar-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: calc(100vh - 60px);
+      padding: 1.5rem;
+    }
+    .form-fields {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      padding: 24px;
+      overflow-y: auto;
+      max-height: calc(100vh - 180px);
+    }
+    .form-fields > div {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    .logo-container {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .logo-container svg {
+      height: 100%;
+      width: auto;
+      max-width: 200px;
+    }
+    .expand-button {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      color: #9ca3af;
+      transition: all 0.3s ease;
+    }
+    .group:hover .expand-button {
+      color: #ff8c5f;
+    }
+    .link-cell {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 1rem;
+    }
+    .table-row td {
+      vertical-align: top;
+      padding-top: 1rem;
+    }
+    .delete-button {
+      color: #6B7280;
+      transition: color 0.2s ease;
+    }
+    .delete-button:hover {
+      color: #EF4444;
+    }
+    #jobDescription {
+      height: 80px;
+      resize: vertical;
+    }
+    .status-pending {
+      background-color: #FEF3C7;
+      color: #92400E;
+    }
+    .status-rejected {
+      background-color: #FEE2E2;
+      color: #991B1B;
+    }
+    .status-interview {
+      background-color: #E0E7FF;
+      color: #3730A3;
+    }
+    .status-accepted {
+      background-color: #D1FAE5;
+      color: #065F46;
+    }
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+      min-width: 160px;
+      display: none;
+    }
+    .dropdown-menu.show {
+      display: block;
+    }
+    .dropdown-item {
+      padding: 12px 16px;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .dropdown-item:hover {
+      background-color: var(--secondary);
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .form-fields > div {
+      background: white;
+      padding: 8px;
+      border-radius: 8px;
+    }
+    .form-fields > div:hover {
+      background: #f9fafb;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    input, select, textarea {
+      transition: all 0.2s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 140, 95, 0.2);
+    }
+    /* Label Styles */
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    /* Required Field Indicator */
+    label[for="jobTitle"]::after,
+    label[for="companyName"]::after {
+      content: " *";
+      color: var(--error);
+    }
+    /* Add Job Button */
+    #addJobBtn {
+      background-color: var(--primary);
+      color: var(--text-primary);
+      width: 56px;
+      height: 56px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 40;
+    }
+    #addJobBtn:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    /* Status Badge */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      display: inline-block;
+    }
+    /* Delete Modal */
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--text-primary);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background-color: var(--secondary-hover);
+    }
+    .btn-danger {
+      background-color: var(--error);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-danger:hover {
+      opacity: 0.9;
+    }
+    /* Actions Menu */
+    .actions-cell {
+      position: relative;
+      min-width: 100px;
+    }
+
+    .dropdown-menu {
+      position: fixed;
+      right: auto;
+      top: auto;
+      background: white;
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      min-width: 160px;
+      display: none;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .table-container {
+      position: relative;
+      overflow-x: auto;
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    .table-wrapper {
+      position: relative;
+      min-height: 200px;
+    }
+
+    /* Input Padding */
+    input, select, textarea {
+      padding: 12px 16px;
+      font-size: 0.875rem;
+    }
+
+    /* Textarea Auto Height */
+    textarea {
+      min-height: 80px;
+      height: auto;
+      overflow-y: hidden;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        right: -100%;
+      }
+
+      .form-fields {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      .table-container {
+        margin: 0 -16px;
+      }
+
+      th, td {
+        padding: 12px;
+        font-size: 0.813rem;
+      }
+
+      .description-cell {
+        max-width: 200px;
+      }
+
+      #addJobBtn {
+        width: 48px;
+        height: 48px;
+        bottom: 24px;
+        right: 24px;
+      }
+
+      .modal-content {
+        margin: 0 16px;
+      }
+
+      input, select, textarea {
+        padding: 12px;
+      }
+    }
+
+    /* Fix Table Scroll */
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Improve Mobile Form */
+    @media (max-width: 768px) {
+      .form-submit {
+        padding: 16px;
+      }
+
+      .sidebar-header {
+        padding: 12px 16px;
+      }
+
+      .form-fields > div {
+        margin-bottom: 8px;
+      }
+    }
+
+    /* Status Badge Mobile */
+    @media (max-width: 768px) {
+      .status-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
 </head>
-<body>
-  <div class="container mt-5">
-    <h1 class="text-center">Job Tracker</h1>
-    <form id="jobForm" class="mb-3">
-      <div class="row g-3">
-        <div class="col-md-4">
-          <input type="text" class="form-control" id="jobTitle" placeholder="Job Title" required>
-        </div>
-        <div class="col-md-4">
-          <input type="text" class="form-control" id="companyName" placeholder="Company Name" required>
-        </div>
-        <div class="col-md-4">
-          <input type="text" class="form-control" id="jobLocation" placeholder="Job Location">
-        </div>
-        <div class="col-md-12">
-          <textarea class="form-control" id="jobDescription" placeholder="Job Description" rows="3"></textarea>
-        </div>
-        <div class="col-md-12">
-          <input type="url" class="form-control" id="jobLink" placeholder="Job Link">
+<body class="bg-gray-100 text-[#191919]">
+  <div class="bg-white shadow-md">
+    <div class="container mx-auto px-8 py-4 max-w-6xl">
+      <div class="logo-container">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-briefcase text-[#ff8c5f] text-3xl"></i>
+          <span class="text-2xl font-bold">JobTracker</span>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary mt-3">Add Job</button>
+    </div>
+  </div>
+
+  <button id="addJobBtn">
+    <i class="fas fa-plus text-xl"></i>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 class="text-xl font-bold">Add New Job</h2>
+      <button id="closeSidebar" class="text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <form id="jobForm" class="sidebar-form">
+      <div class="form-fields">
+        <div>
+          <label for="jobTitle">Job Title</label>
+          <input type="text" id="jobTitle" required>
+        </div>
+        <div>
+          <label for="companyName">Company Name</label>
+          <input type="text" id="companyName" required>
+        </div>
+        <div>
+          <label for="jobLocation">Location</label>
+          <input type="text" id="jobLocation">
+        </div>
+        <div>
+          <label for="jobLink">Job Link</label>
+          <input type="url" id="jobLink">
+        </div>
+        <div class="full-width">
+          <label for="jobDescription">Description</label>
+          <textarea id="jobDescription" rows="3"></textarea>
+        </div>
+        <div>
+          <label for="jobStatus">Status</label>
+          <select id="jobStatus">
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="First Interview">First Interview</option>
+            <option value="Technical Interview">Technical Interview</option>
+            <option value="Final Interview">Final Interview</option>
+            <option value="Accepted">Accepted</option>
+          </select>
+        </div>
+        <div class="full-width">
+          <label for="jobNotes">Notes</label>
+          <textarea id="jobNotes" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" id="submitButton" class="btn-primary w-full">
+          Add Job
+        </button>
+      </div>
     </form>
-    <table class="table table-striped" id="jobTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Job Title</th>
-          <th>Company Name</th>
-          <th>Location</th>
-          <th>Description</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  </div>
+
+  <div class="container mx-auto px-8 py-8 max-w-6xl">
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div class="table-container">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <div class="sort-button" data-sort="date">
+                    Date
+                    <i class="fas fa-sort"></i>
+                  </div>
+                </th>
+                <th>
+                  <div class="sort-button" data-sort="title">
+                    Job Title
+                    <i class="fas fa-sort"></i>
+                  </div>
+                </th>
+                <th>
+                  <div class="sort-button" data-sort="company">
+                    Company Name
+                    <i class="fas fa-sort"></i>
+                  </div>
+                </th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="jobTable">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="modal-content">
+      <h3 class="modal-title">Delete Job</h3>
+      <p>Are you sure you want to delete this job application?</p>
+      <div class="modal-actions">
+        <button id="cancelDelete" class="btn-secondary">Cancel</button>
+        <button id="confirmDelete" class="btn-danger">Delete</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const API_URL = 'http://localhost:3000/jobs';
-
+    const API_URL = 'https://your-server-url.com/jobs';
+    
+    let currentSort = { field: 'date', direction: 'desc' };
+    let isEditing = false;
+    let currentEditingJob = null;
+    
+    const addJobBtn = document.getElementById('addJobBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const closeSidebarBtn = document.getElementById('closeSidebar');
     const jobForm = document.getElementById('jobForm');
-    const jobTable = document.getElementById('jobTable').querySelector('tbody');
+    const jobTable = document.getElementById('jobTable');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    }
+
+    addJobBtn.addEventListener('click', openSidebar);
+    closeSidebarBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
 
     const loadJobs = async () => {
       const response = await fetch(API_URL);
-      const jobs = await response.json();
+      let jobs = await response.json();
+      
+      jobs.sort((a, b) => {
+        const aValue = a[currentSort.field];
+        const bValue = b[currentSort.field];
+        const direction = currentSort.direction === 'asc' ? 1 : -1;
+        
+        return aValue > bValue ? direction : -direction;
+      });
 
       jobTable.innerHTML = '';
       jobs.forEach(job => {
-        const row = `<tr>
+        const row = `<tr class="table-row">
           <td>${job.date}</td>
-          <td>${job.title}</td>
+          <td class="font-medium">${job.title}</td>
           <td>${job.company}</td>
           <td>${job.location}</td>
-          <td>${job.description}</td>
-          <td><a href="${job.link}" target="_blank">View</a></td>
+          <td>
+            <span class="status-badge ${getStatusColor(job.status)}">${job.status || 'Pending'}</span>
+          </td>
+          <td class="relative group">
+            <button class="expand-button">
+              <i class="fas fa-chevron-down expand-arrow"></i>
+            </button>
+            <div class="description-cell">
+              ${job.description}
+              ${job.notes ? `<div class="mt-4 text-secondary"><strong>Notes:</strong> ${job.notes}</div>` : ''}
+            </div>
+          </td>
+          <td class="relative actions-cell">
+            <div class="flex items-center gap-3">
+              ${job.link ? `<a href="${job.link}" target="_blank" class="text-info hover:opacity-80">
+                <i class="fas fa-external-link-alt"></i>
+              </a>` : ''}
+              <button class="text-secondary hover:text-primary" onclick="showActionsMenu(event, ${JSON.stringify(job).replace(/"/g, '&quot;')})">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="dropdown-menu">
+                <div class="dropdown-item" onclick="editJob(${JSON.stringify(job).replace(/"/g, '&quot;')})">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit</span>
+                </div>
+                <div class="dropdown-item" onclick="showDeleteModal(${JSON.stringify(job).replace(/"/g, '&quot;')})">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Delete</span>
+                </div>
+              </div>
+            </div>
+          </td>
         </tr>`;
         jobTable.insertAdjacentHTML('beforeend', row);
+      });
+
+      document.querySelectorAll('.expand-arrow').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const row = e.target.closest('tr');
+          row.classList.toggle('expanded');
+        });
       });
     };
 
@@ -77,23 +890,263 @@
         body: JSON.stringify(job),
       });
       loadJobs();
+      closeSidebar();
     };
 
-    jobForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    const getStatusColor = (status) => {
+      switch(status) {
+        case 'Rejected':
+          return 'status-rejected';
+        case 'First Interview':
+        case 'Technical Interview':
+        case 'Final Interview':
+          return 'status-interview';
+        case 'Accepted':
+          return 'status-accepted';
+        default:
+          return 'status-pending';
+      }
+    };
 
-      const date = new Date().toLocaleDateString();
-      const job = {
-        date,
+    const editJob = (job) => {
+      currentEditingJob = job;
+      document.querySelector('.sidebar h2').textContent = 'Edit Job';
+      document.getElementById('jobTitle').value = job.title;
+      document.getElementById('companyName').value = job.company;
+      document.getElementById('jobLocation').value = job.location;
+      document.getElementById('jobLink').value = job.link || '';
+      document.getElementById('jobDescription').value = job.description;
+      document.getElementById('jobStatus').value = job.status || 'Pending';
+      document.getElementById('jobNotes').value = job.notes || '';
+      document.getElementById('submitButton').textContent = 'Update Job';
+      isEditing = true;
+      openSidebar();
+    };
+
+    const resetForm = () => {
+      document.querySelector('.sidebar h2').textContent = 'Add New Job';
+      document.getElementById('submitButton').textContent = 'Add Job';
+      jobForm.reset();
+      isEditing = false;
+      currentEditingJob = null;
+    };
+
+    const showActionsMenu = (event, job) => {
+      event.stopPropagation();
+      const button = event.currentTarget;
+      const menu = button.nextElementSibling;
+      
+      // Close all other menus first
+      document.querySelectorAll('.dropdown-menu.show').forEach(m => {
+        if (m !== menu) m.classList.remove('show');
+      });
+      
+      // Position the menu relative to the click position
+      const rect = button.getBoundingClientRect();
+      menu.style.top = `${rect.bottom + 8}px`;
+      menu.style.left = `${rect.left}px`;
+      
+      menu.classList.toggle('show');
+      
+      // Close menu when clicking outside
+      const closeMenu = (e) => {
+        if (!menu.contains(e.target) && !button.contains(e.target)) {
+          menu.classList.remove('show');
+          document.removeEventListener('click', closeMenu);
+        }
+      };
+      
+      document.addEventListener('click', closeMenu);
+    };
+
+    // Auto-resize textarea
+    const autoResizeTextarea = (element) => {
+      element.style.height = 'auto';
+      element.style.height = (element.scrollHeight) + 'px';
+    };
+
+    // Add auto-resize to all textareas
+    document.querySelectorAll('textarea').forEach(textarea => {
+      textarea.addEventListener('input', () => autoResizeTextarea(textarea));
+      // Initial resize
+      autoResizeTextarea(textarea);
+    });
+
+    // Handle mobile table scroll
+    const tableContainer = document.querySelector('.table-container');
+    let isScrolling;
+    
+    tableContainer.addEventListener('scroll', () => {
+      clearTimeout(isScrolling);
+      
+      // Hide any open menus while scrolling
+      document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+      });
+      
+      isScrolling = setTimeout(() => {
+        // Scrolling has stopped
+      }, 66);
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      // Hide any open menus on resize
+      document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+      });
+    });
+
+    closeSidebarBtn.addEventListener('click', () => {
+      closeSidebar();
+      resetForm();
+    });
+
+    overlay.addEventListener('click', () => {
+      closeSidebar();
+      resetForm();
+    });
+
+    jobForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = {
         title: document.getElementById('jobTitle').value,
         company: document.getElementById('companyName').value,
         location: document.getElementById('jobLocation').value,
         description: document.getElementById('jobDescription').value,
         link: document.getElementById('jobLink').value,
+        status: document.getElementById('jobStatus').value,
+        notes: document.getElementById('jobNotes').value,
       };
 
-      addJob(job);
-      jobForm.reset();
+      if (isEditing && currentEditingJob) {
+        // Update existing job
+        try {
+          const response = await fetch(`${API_URL}?date=${encodeURIComponent(currentEditingJob.date)}&title=${encodeURIComponent(currentEditingJob.title)}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ...formData, date: currentEditingJob.date }),
+          });
+          
+          if (response.ok) {
+            await loadJobs();
+            closeSidebar();
+            resetForm();
+          } else {
+            console.error('Failed to update job');
+          }
+        } catch (error) {
+          console.error('Error updating job:', error);
+        }
+      } else {
+        // Add new job
+        const date = new Date().toLocaleDateString();
+        const job = {
+          date,
+          ...formData
+        };
+        await addJob(job);
+        resetForm();
+      }
+    });
+
+    // Validate and update submit button state
+    const validateForm = () => {
+      // אם אנחנו במצב עריכה, נאפשר שליחה בכל מקרה
+      if (isEditing) {
+        document.getElementById('submitButton').disabled = false;
+        document.getElementById('submitButton').style.opacity = '1';
+        return;
+      }
+
+      // וולידציה רק עבור הוספת רשומה חדשה
+      const requiredFields = ['jobTitle', 'companyName'];
+      const allFieldsValid = requiredFields.every(field => 
+        document.getElementById(field).value.trim() !== ''
+      );
+      
+      document.getElementById('submitButton').disabled = !allFieldsValid;
+      document.getElementById('submitButton').style.opacity = allFieldsValid ? '1' : '0.5';
+    };
+
+    // Add validation listeners to all required fields
+    ['jobTitle', 'companyName'].forEach(fieldId => {
+      document.getElementById(fieldId).addEventListener('input', validateForm);
+    });
+
+    // Initial validation
+    validateForm();
+
+    document.querySelectorAll('.sort-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const field = button.dataset.sort;
+        
+        if (currentSort.field === field) {
+          currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSort.field = field;
+          currentSort.direction = 'asc';
+        }
+        
+        document.querySelectorAll('.sort-button').forEach(btn => {
+          const icon = btn.querySelector('i');
+          if (btn.dataset.sort === currentSort.field) {
+            icon.className = `fas fa-sort-${currentSort.direction}`;
+            btn.classList.add('sort-active');
+          } else {
+            icon.className = 'fas fa-sort';
+            btn.classList.remove('sort-active');
+          }
+        });
+        
+        loadJobs();
+      });
+    });
+
+    let jobToDelete = null;
+
+    const deleteJob = async (job) => {
+      try {
+        const response = await fetch(
+          `${API_URL}?date=${encodeURIComponent(job.date)}&title=${encodeURIComponent(job.title)}`,
+          {
+            method: 'DELETE'
+          }
+        );
+        
+        if (response.ok) {
+          await loadJobs();
+        } else {
+          const error = await response.text();
+          console.error('Failed to delete job:', error);
+          alert('Failed to delete job. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error deleting job:', error);
+        alert('Error occurred while deleting job. Please try again.');
+      }
+    };
+
+    const showDeleteModal = (job) => {
+      jobToDelete = job;
+      document.getElementById('deleteModal').classList.remove('hidden');
+      document.getElementById('deleteModal').classList.add('flex');
+    };
+
+    const hideDeleteModal = () => {
+      jobToDelete = null;
+      document.getElementById('deleteModal').classList.add('hidden');
+      document.getElementById('deleteModal').classList.remove('flex');
+    };
+
+    document.getElementById('cancelDelete').addEventListener('click', hideDeleteModal);
+    document.getElementById('confirmDelete').addEventListener('click', () => {
+      if (jobToDelete) {
+        deleteJob(jobToDelete);
+        hideDeleteModal();
+      }
     });
 
     document.addEventListener('DOMContentLoaded', loadJobs);

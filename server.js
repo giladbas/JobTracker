@@ -2,6 +2,7 @@ const { google } = require('googleapis');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config();
 
 // בדוק שמשתני הסביבה מוגדרים
 if (!process.env.CLIENT_EMAIL || !process.env.PRIVATE_KEY) {
@@ -61,8 +62,8 @@ app.get('/jobs', async (req, res) => {
 // הוספת עבודה חדשה לגיליון
 app.post('/jobs', async (req, res) => {
   try {
-    const { date, title, company, location, description, link } = req.body;
-    if (!date || !title || !company || !location || !description || !link) {
+    const { date, title, company, location, description, link, status, notes } = req.body;
+    if (!date || !title || !company) {
       return res.status(400).send('Missing required fields');
     }
     await sheets.spreadsheets.values.append({
@@ -70,7 +71,7 @@ app.post('/jobs', async (req, res) => {
       range: SHEET_NAME,
       valueInputOption: 'RAW',
       resource: {
-        values: [[date, title, company, location, description, link]],
+        values: [[date, title, company, location || '', description || '', link || '', status || 'Pending', notes || '']],
       },
     });
     res.status(201).send('Job added successfully');
@@ -79,6 +80,116 @@ app.post('/jobs', async (req, res) => {
   }
 });
 
+// הוספת נתיב מחיקה
+app.delete('/jobs', async (req, res) => {
+  try {
+    const { date, title } = req.query;
+    
+    // קבלת כל הנתונים
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+    });
+    
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) {
+      return res.status(404).send('No data found');
+    }
+
+    // מציאת האינדקס של השורה למחיקה
+    const headers = rows[0];
+    const dateIndex = headers.indexOf('date');
+    const titleIndex = headers.indexOf('title');
+    
+    const rowIndex = rows.findIndex((row, index) => {
+      if (index === 0) return false; // דילוג על שורת הכותרות
+      return row[dateIndex] === date && row[titleIndex] === title;
+    });
+
+    if (rowIndex === -1) {
+      return res.status(404).send('Job not found');
+    }
+
+    // מחיקת השורה
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      resource: {
+        requests: [{
+          deleteDimension: {
+            range: {
+              sheetId: 0,
+              dimension: 'ROWS',
+              startIndex: rowIndex,
+              endIndex: rowIndex + 1
+            }
+          }
+        }]
+      }
+    });
+
+    res.status(200).send('Job deleted successfully');
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
+
+// נדכון רשומה קיימת
+app.put('/jobs', async (req, res) => {
+  try {
+    const { date, title } = req.query;
+    const updatedJob = req.body;
+    
+    // קבלת כל הנתונים
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: SHEET_NAME,
+    });
+    
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) {
+      return res.status(404).send('No data found');
+    }
+
+    // מציאת האינדקס של השורה לעדכון
+    const headers = rows[0];
+    const dateIndex = headers.indexOf('date');
+    const titleIndex = headers.indexOf('title');
+    
+    const rowIndex = rows.findIndex((row, index) => {
+      if (index === 0) return false;
+      return row[dateIndex] === date && row[titleIndex] === title;
+    });
+
+    if (rowIndex === -1) {
+      return res.status(404).send('Job not found');
+    }
+
+    // עדכון השורה
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${SHEET_NAME}!A${rowIndex + 1}`,
+      valueInputOption: 'RAW',
+      resource: {
+        values: [[
+          updatedJob.date,
+          updatedJob.title,
+          updatedJob.company,
+          updatedJob.location,
+          updatedJob.description,
+          updatedJob.link || '',
+          updatedJob.status || 'ממתין לתשובה',
+          updatedJob.notes || ''
+        ]]
+      }
+    });
+
+    res.status(200).send('Job updated successfully');
+  } catch (error) {
+    console.error('Error updating job:', error);
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
 
 // נתיב ברירת מחדל ל-GET /
 app.get('/', (req, res) => {
@@ -86,6 +197,6 @@ app.get('/', (req, res) => {
 });
 
 // הגדרת השרת
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
