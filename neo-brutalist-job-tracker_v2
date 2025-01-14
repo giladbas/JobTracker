@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker - Neo Brutalist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #FF90E8;
+            --secondary: #FFF3F1;
+            --accent: #B6FF9C;
+            --background: #ffffff;
+            --text: #000000;
+            --shadow-color: #000;
+            --border-color: #E5E5E5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .neo-header {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border: 2px solid var(--shadow-color);
+            box-shadow: 4px 4px 0 var(--shadow-color);
+            margin-bottom: 2rem;
+        }
+
+        .neo-card {
+            background: white;
+            border: 4px solid var(--shadow-color);
+            box-shadow: 8px 8px 0 var(--shadow-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s;
+        }
+
+        .neo-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 var(--shadow-color);
+        }
+
+        .neo-button {
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+            box-shadow: 2px 2px 0 var(--shadow-color);
+            padding: 0.75rem 1.25rem;
+            background: var(--secondary);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .neo-button:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 var(--shadow-color);
+        }
+
+        .neo-input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--shadow-color);
+            background: var(--secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .neo-input:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 2px 2px 0 var(--shadow-color);
+        }
+
+        .neo-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+        }
+
+        .neo-table th {
+            background: var(--secondary);
+            padding: 1rem;
+            border-bottom: 2px solid var(--shadow-color);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .neo-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .neo-table tr {
+            transition: background 0.2s;
+        }
+
+        .neo-table tr:hover {
+            background: var(--secondary);
+        }
+
+        .neo-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--shadow-color);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .status-pending { 
+            background: #FFE5BD;
+            color: #92400E;
+        }
+        
+        .status-first-interview { 
+            background: #B4E4FF;
+            color: #1E40AF;
+        }
+        
+        .status-technical-interview { 
+            background: #BAE6FD;
+            color: #0369A1;
+        }
+        
+        .status-final-interview { 
+            background: #BBF7D0;
+            color: #166534;
+        }
+        
+        .status-rejected { 
+            background: #FECACA;
+            color: #991B1B;
+        }
+        
+        .status-accepted { 
+            background: #86EFAC;
+            color: #166534;
+        }
+
+        .neo-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--background);
+            border-left: 2px solid var(--shadow-color);
+            transition: right 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .neo-sidebar.open {
+            right: 0;
+        }
+
+        #addJobBtn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border: 2px solid var(--shadow-color);
+            box-shadow: 4px 4px 0 var(--shadow-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        #addJobBtn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--shadow-color);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .sidebar-header {
+            background: var(--secondary);
+            padding: 1.5rem;
+        }
+
+        .sidebar-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--shadow-color);
+            background: white;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-button {
+            padding: 0.5rem;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Desktop description styles */
+        .description-cell {
+            position: relative;
+            padding-right: 2.5rem;
+            overflow: hidden;
+            max-height: 3.6em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        .description-cell.expanded {
+            max-height: unset;
+        }
+
+        .description-cell .expand-button {
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
+            transform: translateY(-50%);
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .description-cell .expand-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .expanded .description-cell {
+            max-height: none;
+        }
+
+        .expand-button {
+            position: absolute;
+            top: 1.25rem;
+            right: 1rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background: none;
+            border: none;
+            z-index: 2;
+        }
+
+        .expanded .expand-button {
+            transform: rotate(180deg);
+        }
+
+        .neo-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: var(--background);
+        }
+
+        @media (max-width: 768px) {
+            /* Reset table styles */
+            .neo-card, .neo-table, .neo-table tbody, .neo-table tr {
+                background: none;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+
+            .neo-table thead {
+                display: none;
+            }
+
+            /* Mobile card style */
+            .job-row {
+                background: white;
+                margin: 1.5rem 1rem;
+                border: 2px solid var(--shadow-color);
+                border-radius: 4px;
+                box-shadow: 4px 4px 0 var(--shadow-color);
+            }
+
+            .job-header {
+                position: relative;
+                padding: 1.25rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .job-main-info {
+                flex: 1;
+                padding-right: 4rem;
+            }
+
+            .header-actions {
+                position: absolute;
+                top: 1.25rem;
+                right: 1.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: center;
+            }
+
+            .job-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+
+            .job-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+            }
+
+            .neo-status {
+                margin-top: 0.75rem;
+            }
+
+            /* Action buttons */
+            .job-actions {
+                position: static;
+            }
+
+            .expand-button {
+                position: static;
+                padding: 0.5rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            /* Content area */
+            .job-content {
+                display: none !important;
+                padding: 1.25rem;
+                background: var(--secondary);
+                border-top: 1px solid var(--border-color);
+            }
+
+            .job-content.show {
+                display: block !important;
+            }
+
+            .content-section {
+                background: white;
+                padding: 1.25rem;
+                border-radius: 4px;
+                margin-bottom: 0.75rem;
+            }
+
+            .content-section:last-child {
+                margin-bottom: 0;
+            }
+
+            .actions-menu {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-radius: 12px 12px 0 0;
+                border-top: 2px solid var(--shadow-color);
+                transform: translateY(100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .job-row {
+                margin: 1.25rem 0.75rem;
+            }
+
+            .job-header {
+                padding: 1rem;
+            }
+
+            .job-actions {
+                top: 1rem;
+                right: 3rem;
+            }
+
+            .expand-button {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .job-content {
+                padding: 1rem;
+            }
+
+            .content-section {
+                padding: 1rem;
+            }
+        }
+
+        .ph {
+            font-size: 1.25rem;
+        }
+
+        .notes-section {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .job-row {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .job-main-info {
+            flex: 1;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .job-actions {
+            position: relative;
+        }
+
+        .actions-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 2px solid var(--shadow-color);
+            box-shadow: 4px 4px 0 var(--shadow-color);
+            display: none;
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .actions-menu.show {
+            display: block;
+        }
+
+        .action-item {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-item:hover {
+            background: var(--secondary);
+        }
+
+        .job-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .expanded .job-content {
+            display: block;
+        }
+
+        .content-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .content-section p {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 100%;
+        }
+
+        .job-row {
+            background: white;
+            margin: 0.75rem;
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+            overflow: hidden;
+            width: calc(100% - 1.5rem);
+        }
+
+        .job-header {
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 0.75rem;
+            align-items: start;
+        }
+
+        .job-main-info {
+            grid-column: 1 / -1;
+            overflow: hidden;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .job-meta {
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .job-content {
+            padding: 1rem;
+            background: var(--secondary);
+            overflow: hidden;
+        }
+
+        .content-section {
+            background: white;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .content-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-section h4 {
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .content-section p {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 100%;
+        }
+
+        .actions-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            border: 2px solid var(--shadow-color);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .actions-menu.show {
+            transform: translateY(0);
+        }
+
+        .action-item {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .action-item:last-child {
+            border-bottom: none;
+        }
+
+        .expand-button {
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .expand-button.rotated i {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 480px) {
+            .job-row {
+                margin: 0.375rem 0;
+                box-shadow: 3px 3px 0 var(--shadow-color);
+            }
+
+            .job-header {
+                padding: 0.875rem;
+            }
+
+            .job-content {
+                padding: 0.875rem;
+            }
+
+            .content-section {
+                padding: 0.875rem;
+            }
+        }
+
+        /* עדכון סגנונות מובייל */
+        @media (max-width: 768px) {
+            /* ביטול אפקטים במובייל */
+            .neo-card:hover,
+            .neo-button:hover,
+            .neo-table tr:hover,
+            .action-item:hover {
+                transform: none;
+                box-shadow: none;
+                background: none;
+            }
+
+            /* מיקום מחדש של כפתורי פעולה */
+            .job-header {
+                position: relative;
+                padding: 1.25rem;
+                padding-right: 5rem;
+            }
+
+            .job-actions {
+                position: absolute;
+                top: 1.25rem;
+                right: 3.5rem;
+                z-index: 20;
+            }
+
+            .expand-button {
+                position: absolute;
+                top: 1.25rem;
+                right: 1.25rem;
+                padding: 0.5rem;
+                background: none;
+                border: none;
+                cursor: pointer;
+                z-index: 20;
+            }
+
+            /* הסתרת תוכן כברירת מחדל */
+            .job-content {
+                display: none !important;
+            }
+
+            .job-content.show {
+                display: block !important;
+            }
+        }
+
+        .description-content {
+            overflow: hidden;
+        }
+
+        /* Desktop card styles */
+        @media (min-width: 769px) {
+            .job-row {
+                background: white;
+                border: 2px solid var(--shadow-color);
+                border-radius: 4px;
+                box-shadow: 4px 4px 0 var(--shadow-color);
+                overflow: hidden;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .job-row:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 6px 6px 0 var(--shadow-color);
+            }
+
+            .job-header {
+                position: relative;
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .job-main-info {
+                margin-bottom: 1rem;
+            }
+
+            .job-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                word-break: break-word;
+            }
+
+            .job-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                color: var(--text-secondary);
+            }
+
+            .job-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            /* כפתורי פעולה בדסקטופ */
+            .header-actions {
+                display: flex;
+                gap: 0.75rem;
+                align-items: center;
+            }
+
+            .action-button {
+                padding: 0.5rem;
+                min-width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--secondary);
+                border: 2px solid var(--shadow-color);
+                border-radius: 4px;
+                box-shadow: 2px 2px 0 var(--shadow-color);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .action-button:hover {
+                transform: translate(-1px, -1px);
+                box-shadow: 3px 3px 0 var(--shadow-color);
+            }
+
+            .job-content {
+                display: none;
+                padding: 1.5rem;
+                background: var(--secondary);
+                border-top: 1px solid var(--border-color);
+            }
+
+            .job-content.show {
+                display: block;
+            }
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .jobs-grid {
+                display: block;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .jobs-grid {
+                padding: 0.75rem;
+            }
+        }
+
+        /* View Controls */
+        .view-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .sort-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .sort-button.active .sort-icon {
+            transform: rotate(180deg);
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-button {
+            padding: 0.5rem;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-button.active {
+            background: var(--primary);
+        }
+
+        /* Table View */
+        .jobs-table {
+            background: white;
+            border: 2px solid var(--shadow-color);
+            border-radius: 4px;
+            box-shadow: 4px 4px 0 var(--shadow-color);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .jobs-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .jobs-table th {
+            background: var(--secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--shadow-color);
+        }
+
+        .jobs-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .jobs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .jobs-table tr:hover {
+            background: var(--secondary);
+        }
+
+        /* עיצוב מותאם לסטטוס בתצוגת טבלה */
+        .jobs-table .neo-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        /* הסתרת תצוגת טבלה במובייל */
+        @media (max-width: 768px) {
+            .jobs-table {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .view-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .sort-controls {
+                justify-content: center;
+            }
+            
+            .view-toggle {
+                justify-content: center;
+            }
+        }
+
+        /* Table View Styles */
+        .jobs-table tr.job-content > td > div {
+            transition: all 0.3s ease;
+        }
+
+        .jobs-table tr.job-content > td > div.show {
+            display: block !important;
+        }
+
+        .jobs-table .action-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .jobs-table tr.expanded .action-button i.ph-caret-down {
+            transform: rotate(180deg);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* עדכון סגנונות טבלה */
+        .jobs-table th,
+        .jobs-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* הגדרת רוחב קבוע לעמודות */
+        .jobs-table th:nth-child(1),
+        .jobs-table td:nth-child(1) {
+            width: 100px; /* תאריך */
+        }
+
+        .jobs-table th:nth-child(2),
+        .jobs-table td:nth-child(2) {
+            width: 25%; /* כותרת */
+        }
+
+        .jobs-table th:nth-child(3),
+        .jobs-table td:nth-child(3) {
+            width: 20%; /* חברה */
+        }
+
+        .jobs-table th:nth-child(4),
+        .jobs-table td:nth-child(4) {
+            width: 15%; /* מיקום */
+        }
+
+        .jobs-table th:nth-child(5),
+        .jobs-table td:nth-child(5) {
+            width: 15%; /* סטטוס */
+        }
+
+        .jobs-table th:nth-child(6),
+        .jobs-table td:nth-child(6) {
+            width: 150px; /* פעולות */
+        }
+
+        /* עיצוב תיאור המשרה */
+        .job-details .content-wrapper {
+            position: relative;
+            display: grid;
+            grid-template-columns: 100px minmax(0, 2fr) minmax(0, 1fr); /* 2/3 לתיאור, 1/3 לפתק */
+            padding: 1.5rem;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* תיאור המשרה */
+        .job-details .description-section {
+            grid-column: 2;
+            padding-right: 2rem;
+        }
+
+        /* הערות בצד */
+        .job-details .notes-section {
+            grid-column: 3;
+            position: relative;
+            background: #FFF9C4;
+            padding: 1rem;
+            border: 1px solid #FBC02D;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+            transform: rotate(1deg);
+            margin-left: 2rem;
+            height: fit-content;
+            align-self: start;
+        }
+
+        .job-details h4 {
+            color: var(--text);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .job-details p {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+
+        .job-details .mb-4:last-child p {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- שאר התוכן HTML זהה לקובץ המקורי, רק עם הקלאסים החדשים -->
+    <header class="neo-header">
+        <div class="container mx-auto">
+            <div class="flex items-center space-x-4">
+                <div class="logo-container">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <rect x="4" y="4" width="32" height="32" fill="var(--primary)" stroke="black" stroke-width="2"/>
+                        <path d="M12 20h16M20 12v16" stroke="black" stroke-width="2" stroke-linecap="square"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">JobTracker</h1>
+                    <span class="text-sm text-gray-600">Track Your Career Journey</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        <div class="view-controls">
+            <div class="sort-controls">
+                <button class="neo-button sort-button" data-sort="date">
+                    <i class="ph ph-calendar"></i>
+                    <span>Date</span>
+                    <i class="ph ph-caret-down sort-icon"></i>
+                </button>
+                <button class="neo-button sort-button" data-sort="company">
+                    <i class="ph ph-buildings"></i>
+                    <span>Company</span>
+                    <i class="ph ph-caret-down sort-icon"></i>
+                </button>
+                <button class="neo-button sort-button" data-sort="status">
+                    <i class="ph ph-flag"></i>
+                    <span>Status</span>
+                    <i class="ph ph-caret-down sort-icon"></i>
+                </button>
+            </div>
+            <div class="view-toggle">
+                <button class="neo-button view-button active" data-view="table">
+                    <i class="ph ph-list"></i>
+                </button>
+                <button class="neo-button view-button" data-view="grid">
+                    <i class="ph ph-squares-four"></i>
+                </button>
+            </div>
+        </div>
+        <div id="jobTable" class="jobs-grid">
+            <!-- הכרטיסיות יתווספו כאן -->
+        </div>
+    </main>
+
+    <button id="addJobBtn" class="neo-button">
+        <i class="ph ph-plus-circle"></i>
+    </button>
+
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="neo-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold">Add New Job</h2>
+                <button id="closeSidebar" class="text-2xl">&times;</button>
+            </div>
+        </div>
+        
+        <div class="sidebar-content">
+            <form id="jobForm" class="grid grid-cols-2 gap-4">
+                <div class="col-span-1">
+                    <label class="block mb-2">Job Title *</label>
+                    <input type="text" id="jobTitle" class="neo-input" required>
+                </div>
+                
+                <div class="col-span-1">
+                    <label class="block mb-2">Company Name *</label>
+                    <input type="text" id="companyName" class="neo-input" required>
+                </div>
+                
+                <div class="col-span-1">
+                    <label class="block mb-2">Location</label>
+                    <input type="text" id="jobLocation" class="neo-input">
+                </div>
+                
+                <div class="col-span-1">
+                    <label class="block mb-2">Job Link</label>
+                    <input type="url" id="jobLink" class="neo-input">
+                </div>
+                
+                <div class="col-span-2">
+                    <label class="block mb-2">Description</label>
+                    <textarea id="jobDescription" class="neo-input" rows="3"></textarea>
+                </div>
+                
+                <div class="col-span-1">
+                    <label class="block mb-2">Status</label>
+                    <select id="jobStatus" class="neo-input">
+                        <option value="Pending" selected>Pending</option>
+                        <option value="First Interview">First Interview</option>
+                        <option value="Technical Interview">Technical Interview</option>
+                        <option value="Final Interview">Final Interview</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Accepted">Accepted</option>
+                    </select>
+                </div>
+                
+                <div class="col-span-1">
+                    <label class="block mb-2">Notes</label>
+                    <textarea id="jobNotes" class="neo-input" rows="2"></textarea>
+                </div>
+            </form>
+        </div>
+        
+        <div class="sidebar-footer">
+            <button type="submit" form="jobForm" class="neo-button w-full">
+                Add Job
+            </button>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="neo-card w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4">Delete Job</h3>
+            <p class="mb-6">Are you sure you want to delete this job application?</p>
+            <div class="flex justify-end space-x-4">
+                <button id="cancelDelete" class="neo-button">Cancel</button>
+                <button id="confirmDelete" class="neo-button bg-red-500 text-white">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://jobtracker-1-zd8m.onrender.com/jobs';
+        
+        let currentView = 'table';
+        let currentSort = { field: 'date', direction: 'desc' };
+        let isEditing = false;
+        let currentEditingJob = null;
+        
+        const addJobBtn = document.getElementById('addJobBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const closeSidebarBtn = document.getElementById('closeSidebar');
+        const jobForm = document.getElementById('jobForm');
+        const jobTable = document.getElementById('jobTable');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            resetForm();
+        }
+
+        const createDesktopRow = (job) => `
+            <div class="job-row">
+                <div class="job-header">
+                    <div class="job-main-info">
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-meta">
+                            <span>${job.company}</span>
+                            <span>•</span>
+                            <span>${job.location || 'Remote'}</span>
+                            <span>•</span>
+                            <span>${job.date}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-footer">
+                        <div class="neo-status status-${job.status.toLowerCase().replace(/\s+/g, '-')}">
+                            ${job.status}
+                        </div>
+                        
+                        <div class="header-actions">
+                            ${job.link ? `
+                                <a href="${job.link}" target="_blank" class="action-button">
+                                    <i class="ph ph-arrow-square-out"></i>
+                                </a>
+                            ` : ''}
+                            <button onclick="editJob(${JSON.stringify(job).replace(/"/g, '&quot;')})" 
+                                    class="action-button">
+                                <i class="ph ph-pencil-simple"></i>
+                            </button>
+                            <button onclick="showDeleteModal(${JSON.stringify(job).replace(/"/g, '&quot;')})" 
+                                    class="action-button">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                            <button class="action-button" onclick="toggleExpand(this)">
+                                <i class="ph ph-caret-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="job-content">
+                    ${job.description ? `
+                        <div class="content-section">
+                            <h4>Description</h4>
+                            <p>${job.description}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${job.notes ? `
+                        <div class="content-section">
+                            <h4>Notes</h4>
+                            <p>${job.notes}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        const loadJobs = async () => {
+            try {
+                const response = await fetch(API_URL);
+                let jobs = await response.json();
+                
+                jobs.sort((a, b) => {
+                    const aValue = a[currentSort.field];
+                    const bValue = b[currentSort.field];
+                    const direction = currentSort.direction === 'asc' ? 1 : -1;
+                    return aValue > bValue ? direction : -direction;
+                });
+
+                jobTable.innerHTML = '';
+                const isMobile = window.innerWidth <= 768;
+                
+                if (isMobile || currentView === 'grid') {
+                    jobs.forEach(job => {
+                        jobTable.insertAdjacentHTML('beforeend', createDesktopRow(job));
+                    });
+                } else {
+                    jobTable.insertAdjacentHTML('beforeend', createTableView(jobs));
+                }
+
+                document.querySelectorAll('.description-cell').forEach(cell => {
+                    cell.classList.remove('expanded');
+                    const icon = cell.querySelector('.expand-button i');
+                    if (icon) {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                return Promise.resolve();
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                return Promise.reject(error);
+            }
+        };
+
+        const addJob = async (job) => {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(job),
+                });
+                await loadJobs();
+                closeSidebar();
+            } catch (error) {
+                console.error('Error adding job:', error);
+            }
+        };
+
+        const editJob = (job) => {
+            document.querySelectorAll('.actions-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+            
+            currentEditingJob = job;
+            document.querySelector('.neo-sidebar h2').textContent = 'Edit Job';
+            document.getElementById('jobTitle').value = job.title;
+            document.getElementById('companyName').value = job.company;
+            document.getElementById('jobLocation').value = job.location || '';
+            document.getElementById('jobLink').value = job.link || '';
+            document.getElementById('jobDescription').value = job.description || '';
+            document.getElementById('jobStatus').value = job.status || 'Pending';
+            document.getElementById('jobNotes').value = job.notes || '';
+            document.querySelector('button[type="submit"]').textContent = 'Update Job';
+            isEditing = true;
+            openSidebar();
+        };
+
+        const deleteJob = async (job) => {
+            try {
+                await fetch(
+                    `${API_URL}?date=${encodeURIComponent(job.date)}&title=${encodeURIComponent(job.title)}`,
+                    { method: 'DELETE' }
+                );
+                await loadJobs();
+                hideDeleteModal();
+            } catch (error) {
+                console.error('Error deleting job:', error);
+            }
+        };
+
+        const resetForm = () => {
+            document.querySelector('.neo-sidebar h2').textContent = 'Add New Job';
+            document.querySelector('button[type="submit"]').textContent = 'Add Job';
+            jobForm.reset();
+            isEditing = false;
+            currentEditingJob = null;
+        };
+
+        // Event Listeners
+        addJobBtn.addEventListener('click', openSidebar);
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        jobForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                title: document.getElementById('jobTitle').value,
+                company: document.getElementById('companyName').value,
+                location: document.getElementById('jobLocation').value,
+                description: document.getElementById('jobDescription').value,
+                link: document.getElementById('jobLink').value,
+                status: document.getElementById('jobStatus').value || 'Pending',
+                notes: document.getElementById('jobNotes').value,
+            };
+
+            if (isEditing && currentEditingJob) {
+                try {
+                    await fetch(
+                        `${API_URL}?date=${encodeURIComponent(currentEditingJob.date)}&title=${encodeURIComponent(currentEditingJob.title)}`,
+                        {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ ...formData, date: currentEditingJob.date }),
+                        }
+                    );
+                    await loadJobs();
+                    closeSidebar();
+                } catch (error) {
+                    console.error('Error updating job:', error);
+                }
+            } else {
+                const date = new Date().toLocaleDateString();
+                await addJob({ date, ...formData });
+            }
+        });
+
+        // Delete Modal Functions
+        const showDeleteModal = (job) => {
+            jobToDelete = job;
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.getElementById('deleteModal').classList.add('flex');
+        };
+
+        const hideDeleteModal = () => {
+            jobToDelete = null;
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').classList.remove('flex');
+        };
+
+        document.getElementById('cancelDelete').addEventListener('click', hideDeleteModal);
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            if (jobToDelete) {
+                deleteJob(jobToDelete);
+            }
+        });
+
+        // Sort Functions
+        document.querySelectorAll('.sort-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const field = button.dataset.sort;
+                if (currentSort.field === field) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.field = field;
+                    currentSort.direction = 'asc';
+                }
+                loadJobs();
+            });
+        });
+
+        // פונקציות עזר חדשות
+        function toggleActions(button, event) {
+            event.stopPropagation();
+            const menu = button.nextElementSibling;
+            const allMenus = document.querySelectorAll('.actions-menu');
+            
+            // סגירת כל התפריטים האחרים
+            allMenus.forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            
+            menu.classList.toggle('show');
+        }
+
+        function toggleExpand(button) {
+            const isTableView = document.getElementById('jobTable').classList.contains('jobs-table');
+            
+            if (isTableView) {
+                const row = button.closest('tr');
+                const contentRow = row.nextElementSibling;
+                const contentDiv = contentRow.querySelector('div');
+                const icon = button.querySelector('i');
+                
+                if (!row || !contentRow || !contentDiv || !icon) {
+                    console.error('Missing elements:', { row, contentRow, contentDiv, icon });
+                    return;
+                }
+                
+                // סגירת כל השורות האחרות
+                document.querySelectorAll('.jobs-table .job-content div:not([class*="hidden"])').forEach(openContent => {
+                    if (openContent !== contentDiv) {
+                        openContent.classList.add('hidden');
+                        const openRow = openContent.closest('tr').previousElementSibling;
+                        const openIcon = openRow.querySelector('.ph-caret-down');
+                        if (openIcon) {
+                            openIcon.style.transform = 'rotate(0deg)';
+                        }
+                        openRow.classList.remove('expanded');
+                    }
+                });
+                
+                // פתיחה/סגירה של השורה הנוכחית
+                const isExpanded = !contentDiv.classList.contains('hidden');
+                if (isExpanded) {
+                    contentDiv.classList.add('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                    row.classList.remove('expanded');
+                } else {
+                    contentDiv.classList.remove('hidden');
+                    icon.style.transform = 'rotate(180deg)';
+                    row.classList.add('expanded');
+                }
+            } else {
+                // תצוגת גריד
+                const row = button.closest('.job-row');
+                const content = row.querySelector('.job-content');
+                const icon = button.querySelector('i');
+                
+                if (!row || !content || !icon) return;
+                
+                // סגירת כל הכרטיסים האחרים
+                document.querySelectorAll('.job-content.show').forEach(openContent => {
+                    if (openContent !== content) {
+                        openContent.classList.remove('show');
+                        const openIcon = openContent.closest('.job-row').querySelector('.ph-caret-down');
+                        if (openIcon) {
+                            openIcon.style.transform = 'rotate(0deg)';
+                        }
+                        openContent.closest('.job-row').classList.remove('expanded');
+                    }
+                });
+                
+                // פתיחה/סגירה של הכרטיס הנוכחי
+                const isExpanded = content.classList.contains('show');
+                content.classList.toggle('show');
+                icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+                row.classList.toggle('expanded');
+            }
+        }
+
+        // סגירת תפריטים בלחיצה מחוץ להם
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.job-actions')) {
+                document.querySelectorAll('.actions-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // View Toggle
+            document.querySelectorAll('.view-button').forEach(btn => {
+                btn.addEventListener('click', () => toggleView(btn.dataset.view));
+            });
+            
+            // Sort Buttons
+            document.querySelectorAll('.sort-button').forEach(btn => {
+                btn.addEventListener('click', () => updateSort(btn.dataset.sort));
+            });
+            
+            // טען את המשרות עם ברירת המחדל
+            loadJobs().then(() => {
+                toggleView(currentView); // הוסף את השורה הזו
+            });
+        });
+
+        function toggleView(view) {
+            currentView = view;
+            const container = document.getElementById('jobTable');
+            const viewButtons = document.querySelectorAll('.view-button');
+            
+            viewButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+            
+            container.className = view === 'grid' ? 'jobs-grid' : 'jobs-table';
+            
+            // טעינה מחדש של המשרות בתצוגה החדשה
+            loadJobs().then(() => {
+                if (view === 'table') {
+                    // וידוא שכל התכנים מוסתרים בהתחלה
+                    document.querySelectorAll('.jobs-table .job-content div').forEach(content => {
+                        content.classList.remove('show');
+                    });
+                    
+                    // וידוא שכל האייקונים במצב הנכון
+                    document.querySelectorAll('.jobs-table .ph-caret-down').forEach(icon => {
+                        icon.style.transform = 'rotate(0deg)';
+                    });
+                    
+                    // הסרת מצב expanded מכל השורות
+                    document.querySelectorAll('.jobs-table tr').forEach(row => {
+                        row.classList.remove('expanded');
+                    });
+                }
+            });
+        }
+
+        // פונקציה לעדכון מיון
+        function updateSort(field) {
+            if (currentSort.field === field) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.direction = 'asc';
+            }
+            
+            // עדכון אייקוני המיון
+            document.querySelectorAll('.sort-button').forEach(btn => {
+                const icon = btn.querySelector('.sort-icon');
+                if (btn.dataset.sort === field) {
+                    btn.classList.add('active');
+                    icon.style.transform = `rotate(${currentSort.direction === 'asc' ? '0' : '180'}deg)`;
+                } else {
+                    btn.classList.remove('active');
+                    icon.style.transform = 'rotate(0)';
+                }
+            });
+            
+            loadJobs();
+        }
+
+        function createTableView(jobs) {
+            return `
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${jobs.map(job => `
+                            <tr class="border-b border-gray-200" data-job-id="${job.date}-${job.title}">
+                                <td>${job.date}</td>
+                                <td class="font-medium">${job.title}</td>
+                                <td>${job.company}</td>
+                                <td>${job.location || '-'}</td>
+                                <td>
+                                    <span class="neo-status status-${job.status.toLowerCase().replace(/\s+/g, '-')}">
+                                        ${job.status}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <div class="flex justify-end gap-2">
+                                        ${job.link ? `
+                                            <a href="${job.link}" target="_blank" class="action-button">
+                                                <i class="ph ph-arrow-square-out"></i>
+                                            </a>
+                                        ` : ''}
+                                        <button onclick="editJob(${JSON.stringify(job).replace(/"/g, '&quot;')})" 
+                                                class="action-button">
+                                            <i class="ph ph-pencil-simple"></i>
+                                        </button>
+                                        <button onclick="showDeleteModal(${JSON.stringify(job).replace(/"/g, '&quot;')})" 
+                                                class="action-button">
+                                            <i class="ph ph-trash"></i>
+                                        </button>
+                                        <button onclick="toggleTableRow(this)" class="action-button">
+                                            <i class="ph ph-caret-down"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="job-details hidden">
+                                <td colspan="6">
+                                    <div class="content-wrapper">
+                                        ${job.description ? `
+                                            <div class="description-section">
+                                                <h4 class="font-semibold mb-2">Description</h4>
+                                                <p>${job.description}</p>
+                                            </div>
+                                        ` : ''}
+                                        ${job.notes ? `
+                                            <div class="notes-section">
+                                                <h4 class="font-semibold mb-2">Notes</h4>
+                                                <p>${job.notes}</p>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function toggleTableRow(button) {
+            const currentRow = button.closest('tr');
+            const detailsRow = currentRow.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            // סגירת כל השורות האחרות
+            document.querySelectorAll('.job-details:not(.hidden)').forEach(row => {
+                if (row !== detailsRow) {
+                    row.classList.add('hidden');
+                    const prevRow = row.previousElementSibling;
+                    const prevIcon = prevRow.querySelector('.ph-caret-down');
+                    if (prevIcon) {
+                        prevIcon.style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+            
+            // פתיחה/סגירה של השורה הנוכחית
+            detailsRow.classList.toggle('hidden');
+            icon.style.transform = detailsRow.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+    </script>
+</body>
+</html> 
