@@ -1070,6 +1070,44 @@
         .job-details .mb-4:last-child p {
             margin-bottom: 0;
         }
+
+        /* טבלה רספונסיבית */
+        @media (max-width: 768px) {
+            .neo-table {
+                display: block;
+                overflow-x: auto; /* אפשר לגלול את הטבלה */
+                white-space: nowrap; /* שמירה על שורות */
+            }
+
+            .neo-table th, .neo-table td {
+                display: block; /* הפוך את התאים לחסרי שורות */
+                width: 100%; /* כל תא יתפוס את כל הרוחב */
+            }
+
+            .neo-table tr {
+                margin-bottom: 1rem; /* רווח בין השורות */
+                border: 1px solid var(--border-color); /* גבול בין השורות */
+                border-radius: 4px; /* קצוות מעוגלים */
+                background: var(--secondary); /* צבע רקע */
+            }
+
+            .neo-table th {
+                display: none; /* הסתרת כותרות בטבלה */
+            }
+
+            .neo-table td {
+                position: relative; /* מאפשר הוספת תוויות */
+                padding-left: 50%; /* רווח לתוויות */
+            }
+
+            .neo-table td::before {
+                content: attr(data-label); /* הוספת תוויות */
+                position: absolute;
+                left: 0;
+                padding-left: 10px; /* רווח לתוויות */
+                font-weight: bold; /* הדגשת התוויות */
+            }
+        }
     </style>
 </head>
 <body>
