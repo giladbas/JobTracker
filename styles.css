@@ -583,4 +583,51 @@ body {
     .content-section {
         padding: 0.875rem;
     }
+}
+
+/* Table Styles */
+.job-table {
+    border: 2px solid var(--text);
+    background: var(--secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 var(--shadow-color);
+}
+
+/* Filter Buttons */
+.filter-button {
+    background: var(--background);
+    border: 2px solid var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 3px 3px 0 var(--shadow-color);
+}
+
+/* Action Buttons */
+.action-button {
+    border: 2px solid var(--text);
+    background: var(--background);
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Status Tags */
+.status-tag {
+    border: 2px solid var(--text);
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+}
+
+.status-tag.pending {
+    background: #FFE4C4;
+}
+
+.status-tag.rejected {
+    background: #FFB6B6;
 } 
