@@ -1,3 +1,4 @@
+/* Variables */
 :root {
     --primary: #FF90E8;
     --secondary: #FFF3F1;
@@ -8,6 +9,7 @@
     --border-color: #E5E5E5;
 }
 
+/* Reset & Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -21,7 +23,169 @@ body {
     line-height: 1.6;
 }
 
-/* Header Styles */
+/* Layout Classes */
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Flexbox */
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.space-x-4 > * + * {
+    margin-left: 1rem;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+/* Typography */
+.text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-gray-600 {
+    color: #4B5563;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.col-span-1 {
+    grid-column: span 1 / span 1;
+}
+
+.col-span-2 {
+    grid-column: span 2 / span 2;
+}
+
+/* Display */
+.block {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Spacing */
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+/* Width & Max Width */
+.w-full {
+    width: 100%;
+}
+
+.max-w-md {
+    max-width: 28rem;
+}
+
+.mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+/* Position */
+.fixed {
+    position: fixed;
+}
+
+.inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* Z-Index */
+.z-50 {
+    z-index: 50;
+}
+
+/* Colors */
+.bg-black {
+    background-color: #000;
+}
+
+.bg-opacity-50 {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bg-red-500 {
+    background-color: #EF4444;
+}
+
+.text-white {
+    color: #fff;
+}
+
+/* Component Styles */
 .neo-header {
     background: var(--secondary);
     padding: 1.5rem;
@@ -30,7 +194,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Button Styles */
 .neo-button {
     border: 2px solid var(--shadow-color);
     border-radius: 4px;
@@ -47,7 +210,6 @@ body {
     box-shadow: 4px 4px 0 var(--shadow-color);
 }
 
-/* Action Buttons */
 .action-button {
     padding: 0.5rem;
     min-width: 32px;
@@ -68,48 +230,20 @@ body {
     box-shadow: 3px 3px 0 var(--shadow-color);
 }
 
-/* View Controls */
-.view-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    gap: 1rem;
+.neo-input {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid var(--shadow-color);
+    background: var(--secondary);
+    font-size: 0.9375rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
 }
 
-.sort-controls {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.sort-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-}
-
-.sort-button.active .sort-icon {
-    transform: rotate(180deg);
-}
-
-.view-toggle {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.view-button {
-    padding: 0.5rem;
-    min-width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.view-button.active {
-    background: var(--primary);
+.neo-input:focus {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 2px 2px 0 var(--shadow-color);
 }
 
 /* Status Styles */
@@ -155,7 +289,7 @@ body {
     color: #166534;
 }
 
-/* Grid Layout */
+/* Job Card Styles */
 .jobs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -165,7 +299,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Job Card Styles */
 .job-row {
     background: white;
     margin: 0.75rem;
@@ -210,7 +343,6 @@ body {
     color: var(--text-secondary);
 }
 
-/* Content Sections */
 .job-content {
     padding: 1rem;
     background: var(--secondary);
@@ -252,100 +384,6 @@ body {
     line-height: 1.6;
     color: var(--text-secondary);
     max-width: 100%;
-}
-
-/* Utility Classes */
-.hidden {
-    display: none;
-}
-
-.show {
-    display: block;
-}
-
-.ph {
-    font-size: 1.25rem;
-}
-
-/* Mobile Styles */
-@media (max-width: 768px) {
-    .jobs-grid {
-        display: block;
-        padding: 1rem;
-    }
-
-    .view-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .sort-controls {
-        justify-content: center;
-    }
-    
-    .view-toggle {
-        justify-content: center;
-    }
-
-    .job-row {
-        margin: 0.375rem 0;
-        box-shadow: 3px 3px 0 var(--shadow-color);
-    }
-
-    .job-header {
-        padding: 0.875rem;
-        position: relative;
-        padding-right: 5rem;
-    }
-
-    .job-actions {
-        position: absolute;
-        top: 1.25rem;
-        right: 3.5rem;
-        z-index: 20;
-    }
-
-    .job-content {
-        padding: 0.875rem;
-        display: none !important;
-    }
-
-    .job-content.show {
-        display: block !important;
-    }
-
-    .content-section {
-        padding: 0.875rem;
-    }
-
-    .neo-button:hover,
-    .action-button:hover,
-    .job-row:hover {
-        transform: none;
-        box-shadow: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .jobs-grid {
-        padding: 0.75rem;
-    }
-
-    .job-row {
-        margin: 0.375rem 0;
-    }
-
-    .job-header {
-        padding: 0.875rem;
-    }
-
-    .job-content {
-        padding: 0.875rem;
-    }
-
-    .content-section {
-        padding: 0.875rem;
-    }
 }
 
 /* Sidebar Styles */
@@ -424,23 +462,6 @@ body {
     box-shadow: 6px 6px 0 var(--shadow-color);
 }
 
-/* Form Elements */
-.neo-input {
-    width: 100%;
-    padding: 0.875rem;
-    border: 2px solid var(--shadow-color);
-    background: var(--secondary);
-    font-size: 0.9375rem;
-    margin-bottom: 1rem;
-    transition: all 0.2s;
-}
-
-.neo-input:focus {
-    background: white;
-    border-color: var(--primary);
-    box-shadow: 2px 2px 0 var(--shadow-color);
-}
-
 /* Table Styles */
 .neo-table {
     width: 100%;
@@ -475,130 +496,88 @@ body {
     background: var(--secondary);
 }
 
-/* Actions Menu */
-.actions-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: white;
-    border: 2px solid var(--shadow-color);
-    box-shadow: 4px 4px 0 var(--shadow-color);
-    display: none;
-    min-width: 150px;
-    z-index: 10;
-}
-
-.actions-menu.show {
-    display: block;
-}
-
-.action-item {
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.action-item:hover {
-    background: var(--secondary);
-}
-
-/* Delete Modal */
-#deleteModal {
-    background: rgba(0, 0, 0, 0.5);
-}
-
-#deleteModal .neo-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 4px;
-    box-shadow: 8px 8px 0 var(--shadow-color);
-}
-
-/* Expand Button */
-.expand-button {
-    position: absolute;
-    top: 1.25rem;
-    right: 1rem;
-    padding: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    background: none;
-    border: none;
-    z-index: 2;
-}
-
-.expanded .expand-button {
-    transform: rotate(180deg);
-}
-
-/* Description Cell */
-.description-cell {
-    position: relative;
-    padding-right: 2.5rem;
-    overflow: hidden;
-    max-height: 3.6em;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    line-height: 1.6;
-}
-
-.description-cell.expanded {
-    max-height: unset;
-}
-
-.description-cell .expand-button {
-    position: absolute;
-    top: 50%;
-    right: 0.5rem;
-    transform: translateY(-50%);
-    padding: 0.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.description-cell .expand-button i {
-    transition: transform 0.3s ease;
-}
-
-/* Mobile Actions Menu */
+/* Mobile Styles */
 @media (max-width: 768px) {
-    .actions-menu {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 12px 12px 0 0;
-        border: 2px solid var(--shadow-color);
-        transform: translateY(100%);
-        transition: transform 0.3s ease;
-        z-index: 1000;
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .actions-menu.show {
-        transform: translateY(0);
-    }
-
-    .action-item {
+    .jobs-grid {
+        display: block;
         padding: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        border-bottom: 1px solid var(--border-color);
     }
 
-    .action-item:last-child {
-        border-bottom: none;
+    .view-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .sort-controls {
+        justify-content: center;
+    }
+    
+    .view-toggle {
+        justify-content: center;
+    }
+
+    .job-row {
+        margin: 0.375rem 0;
+        box-shadow: 3px 3px 0 var(--shadow-color);
+    }
+
+    .job-header {
+        padding: 0.875rem;
+        position: relative;
+        padding-right: 5rem;
+    }
+
+    .job-actions {
+        position: absolute;
+        top: 1.25rem;
+        right: 3.5rem;
+        z-index: 20;
+    }
+
+    .job-content {
+        padding: 0.875rem;
+        display: none !important;
+    }
+
+    .job-content.show {
+        display: block !important;
+    }
+
+    .content-section {
+        padding: 0.875rem;
+    }
+
+    .neo-button:hover,
+    .action-button:hover,
+    .job-row:hover {
+        transform: none;
+        box-shadow: none;
     }
 
     .neo-sidebar {
         width: 100%;
         right: -100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .jobs-grid {
+        padding: 0.75rem;
+    }
+
+    .job-row {
+        margin: 0.375rem 0;
+    }
+
+    .job-header {
+        padding: 0.875rem;
+    }
+
+    .job-content {
+        padding: 0.875rem;
+    }
+
+    .content-section {
+        padding: 0.875rem;
     }
 } 
